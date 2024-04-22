@@ -6,7 +6,7 @@
 /*   By: ggiertzu <ggiertzu@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 23:07:30 by ggiertzu          #+#    #+#             */
-/*   Updated: 2024/04/21 00:09:43 by ggiertzu         ###   ########.fr       */
+/*   Updated: 2024/04/22 22:12:05 by ggiertzu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void *decrement_thread(void *arg) {
 }
 
 int main() {
-    int *counter = (int *)malloc(sizeof(int)); // Dynamically allocate memory for the shared variable
+    const int *counter = (int *)malloc(sizeof(int)); // Dynamically allocate memory for the shared variable
     if (counter == NULL) {
         perror("malloc");
         return 1;
