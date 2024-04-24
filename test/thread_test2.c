@@ -39,7 +39,7 @@ void *increment_thread(void *arg) {
         }
         pthread_mutex_lock(mutex); // Lock the mutex before accessing the counter
         (*counter)++;
-        printf("Increment thread: Counter = %d\n", *counter);
+        printf("Increment thread: Counter = %ld\n", *counter);
         pthread_mutex_unlock(mutex); // Unlock the mutex
         usleep(50000); // Sleep for 0.5 seconds
     }
@@ -60,7 +60,7 @@ void *decrement_thread(void *arg) {
         }
         pthread_mutex_lock(mutex); // Lock the mutex before accessing the counter
         (*counter)--;
-        printf("Decrement thread: Counter = %d\n", *counter);
+        printf("Decrement thread: Counter = %ld\n", *counter);
         pthread_mutex_unlock(mutex); // Unlock the mutex
         usleep(40000); // Sleep for 0.75 seconds
     }
@@ -68,7 +68,7 @@ void *decrement_thread(void *arg) {
 }
 
 int main() {
-    const int *counter = (int *)malloc(sizeof(int)); // Dynamically allocate memory for the shared variable
+    int *counter = (int *)malloc(sizeof(int)); // Dynamically allocate memory for the shared variable
     if (counter == NULL) {
         perror("malloc");
         return 1;
