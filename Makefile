@@ -10,10 +10,9 @@
 #                                                                              #
 # **************************************************************************** #
 
-CFLAGS  := -g -O0 -fsanitize=thread -Wall -Werror -Wextra
-CC		:= cc
+CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g 
 HEADERS	:= -I include
-SRCS 	:= phil_utils.c 
+SRCS 	:= philo_utils.c philo_helpers.c philo_main.c
 OBJS	:= ${SRCS:.c=.o}
 NAME	:= philo
 
@@ -23,7 +22,7 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)
