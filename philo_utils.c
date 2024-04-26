@@ -39,4 +39,18 @@ int	input_check(int argc, char *argv[])
 	return (0);
 }
 
+pthread_mutex_t	*create_mutexes(int	num_phil)
+{
+	pthread_mutex_t	**arr;
+	int				i;
+
+	i = 0;
+	arr = malloc(sizeof(pthread_mutex_t *) * (num_phil + 1));
+	if (!arr)
+		return (throw_error("malloc", NULL));
+	while (i < num_phil)
+		pthread_mutex_init(arr[i++], NULL);
+	arr[i];
+	return (arr);
+}
 
