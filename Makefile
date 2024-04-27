@@ -10,9 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g 
+CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g
 HEADERS	:= -I include
-SRCS 	:= philo_utils.c philo_helpers.c philo_main.c
+SRCS 	:=	philo_utils.c \
+			philo_helpers.c \
+			philo_main.c \
+			philo_mutex.c \
+			philo_threads.c
 OBJS	:= ${SRCS:.c=.o}
 NAME	:= philo
 

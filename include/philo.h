@@ -20,16 +20,31 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+typedef enum e_status
+{
+	SLEEP,
+	EAT,
+	THINK,
+	DEAD,
+	FORK
+}	t_status;
+
 typedef struct s_data
 {
-	int	num_phil;
+	int	n_phil;
 	int	t_die;
 	int	t_eat;
 	int	t_sleep;
 	int	n_eat;
 	int	*forks;
-	pthread_mutex_t	**arr;
+	pthread_mutex_t	*arr;
 }	t_data;
+
+typedef struct s_thread_inf
+{
+	struct s_data	*data;
+	int				current;
+}	t_thread_inf;
 
 int	ft_atoi(const char *nptr);
 int	ft_isnum(int c);
@@ -38,5 +53,11 @@ int	ft_isdigit(int c);
 pthread_mutex_t	*create_mutexes(int	num_phil);
 t_data	*get_data(int argc, char *argv[]);
 int	start_threading(t_data *data);
+void	*throw_error(char *msg, void *ptr);
+void	ft_putstr_fd(char *s, int fd);
+void	ft_bzero(void *s, size_t n);
+int		print_err(int err);
+int		start_threading(t_data *data);
+void	*get_info(int i, t_data *data);
 
 #endif

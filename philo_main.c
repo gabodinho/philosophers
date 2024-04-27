@@ -15,13 +15,16 @@
 int main(int argc, char *argv[])
 {
     t_data  *data;
+    int     ret;
 
-    if (input_check(argc, argv))
-        write(1, "error\n", 6);
+    ret = input_check(argc, argv);
+    if (ret)
+        return (print_err(ret));
     else
         printf("success\n");
-    // check for validity of numbers too: not smaller than zero
-    data = get_data(argc, argv);    //todo create mutexes from within
-    start_threading(data);          //todo
+    data = get_data(argc, argv);
+    if (!data)
+        return (1);
+    start_threading(data);
     return (0);
 }
