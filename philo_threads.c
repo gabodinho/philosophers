@@ -66,3 +66,79 @@ int	start_threading(t_data *data)
 	// join threads
 	// return
 }
+
+void	init_time(t_data *data)
+{
+	struct timeval	start;
+	int				i;
+
+	gettimeofday(&start, NULL);
+	i = 0;
+	pthread_mutex_lock(data -> sim_status);
+	while (i < data -> n_phil)
+		data -> t_last_meal[i++] = start.tv_sec * 1000 + start.tv_usec / 1000;
+	pthread_mutex_unlock(data -> sim_status);
+}
+
+void	del_data(t_data *data)
+{
+	sleep(1);
+	free(data -> t_last_meal);
+	data -> t_last_meal = NULL;
+	free(data -> sim_status);
+	data -> sim_status = NULL;
+	free(data -> n_meals);
+	data -> n_meals = NULL;
+	free(data);
+	data = NULL;
+}
+
+static int	finish_sim(int i, t_data *data)
+{
+	pthread_mutex_lock(data -> global_sim);
+	*data -> sim_status = '0';
+	pthread_mutex_unlock(data -> global_sim);
+	print_msg(i, DEAD);
+	return (0);
+}
+
+void	*monitoring(void *arg)
+{
+	int		status;
+	int		i;
+	t_data	*data;
+
+	status = 1;
+	i = 0;
+	data = (t_data *) arg;
+	while (status)
+	{
+		while (i < data -> n_phil)
+		{
+			pthread_mutex_lock(&data -> eaten[i]);
+			if (get_t_diff(data -> t_last_meal[i]) >= data -> t_die)
+			{
+				status = finish_sim(i, data);
+				pthread_mutex_unlock(&data -> eaten[i]);
+				break ;
+			}
+			pthread_mutex_unlock(&data -> eaten[i]);
+		}
+	}
+	del_data(data);
+}
+int	start_monitoring(t_data *data)
+{
+	t_data	*data_cpy;
+	pthread_t	monitor;
+
+	data_cpy = copy_data(data);
+	if (pthread_create(monitor, NULL, monitoring, (void *) data_cpy) != 0)
+	{
+		pthread_detach(monitor);
+		del_data(data_cpy);
+		return (1);
+	}
+	pthread_detach(monitor);
+	return (0);
+}

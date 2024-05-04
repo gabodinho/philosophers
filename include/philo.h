@@ -19,6 +19,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <string.h>
 
 typedef enum e_status
 {
@@ -36,8 +37,13 @@ typedef struct s_data
 	int	t_eat;
 	int	t_sleep;
 	int	n_eat;
-	int	*forks;
-	pthread_mutex_t	*arr;
+	// duplicate those pointers for every thread
+	int	*t_last_meal;
+	int	*sim_status;
+	int	*n_meals;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	*eaten;	// for *t_last_meal access
+	pthread_mutex_t	*global_sim;
 }	t_data;
 
 typedef struct s_thread_inf

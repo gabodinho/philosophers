@@ -114,7 +114,7 @@ int main() {
     free(counter); // Free memory allocated for counter
 
     printf("Main thread: Threads have finished execution.\n");
-
+    printf("size of int: %d\n", sizeof(int));
     return 0;
 }
 
