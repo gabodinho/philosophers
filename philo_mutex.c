@@ -12,30 +12,68 @@
 
 #include "philo.h"
 
+pthread_mutex_t	*create_mutexes(int	n)
+{
+	pthread_mutex_t	*arr;
+	int				i;
+
+	i = 0;
+	arr = malloc(sizeof(pthread_mutex_t) * (n));
+	if (!arr)
+		return (throw_error("malloc", NULL));
+	while (i < n)
+	{
+		if (pthread_mutex_init(&arr[i++], NULL) != 0)
+		{
+			while (i--)
+				pthread_mutex_destroy(&arr[i]);
+			return (throw_error("mutex_init", NULL));
+		}
+	}
+	return (arr);
+}
+
+// on nonzero return calling function cleans up workspace
+static int	alloc_arrays(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	data -> forks = create_mutexes(data -> n_phil);
+	data -> eaten = create_mutexes(data -> n_phil);
+	data -> global_sim = create_mutexes(1);
+	data -> t_last_meal = malloc(data -> n_phil * sizeof(struct timeval));
+	data -> sim_status = malloc(data -> n_phil * sizeof(int));
+	data -> n_meals = malloc(data -> n_phil * sizeof(int));
+	if (!data -> forks || !data -> eaten || !data -> global_sim ||
+		!data -> t_last_meal || !data -> sim_status || !data -> n_meals)
+		return (1);
+	memset(data -> n_meals, 0, sizeof(int) * data -> n_phil);
+	memset(data -> sim_status, 0, sizeof(int) * data -> n_phil);
+	while (i < data -> n_phil)
+		gettimeofday(data -> t_last_meal[i++], NULL);
+	return (0);
+}
+
 t_data	*get_data(int argc, char *argv[])
 {
-	t_data			*data;
-	pthread_mutex_t	*mut_arr;
+	t_data	*data;
 
-	mut_arr = create_mutexes(ft_atoi(argv[1]));
-	if (!mut_arr)
-		return (NULL);
 	data = malloc(sizeof(t_data));
+	if (!data)
+		return (NULL);
 	data -> n_phil = ft_atoi(argv[1]);
 	data -> t_die = ft_atoi(argv[2]);
 	data -> t_eat = ft_atoi(argv[3]);
 	data -> t_sleep = ft_atoi(argv[4]);
 	data -> n_eat = -1;
+	data -> thread_id = -1;
 	if (argc == 6)
 		data -> n_eat = ft_atoi(argv[5]);
-	data -> arr = mut_arr;
-	data -> forks = malloc(data -> n_phil * sizeof(int));
-	if (data -> forks == 0)
+	if (alloc_arrays(data))
 	{
-		free(mut_arr);
-		free(data);
+		del_data(data);
 		return (NULL);
 	}
-	ft_bzero(data -> forks, data -> n_phil);
 	return (data);
 }

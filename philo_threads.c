@@ -12,16 +12,6 @@
 
 #include "philo.h"
 
-void	*get_info(int i, t_data *data)
-{
-	t_thread_inf	*info;
-
-	info = malloc(sizeof(t_thread_inf));
-	info -> data = data;
-	info -> current = i;
-	return ((void *) info);
-}
-
 void	*run_philo(void *info)
 {
 	t_data			*data;
@@ -47,14 +37,15 @@ int	start_threading(t_data *data)
 {
 	int	i;
 	pthread_t	*threads;
-	t_thread_inf	*info;
+	t_data		*cpy;
 
 	threads = malloc(data -> n_phil * sizeof(pthread_t));
 	i = 0;
 	while (i < data -> n_phil)
 	{
-		info = get_info(i, data);
-		if (pthread_create(&threads[i++], NULL, run_philo, info) != 0)
+		cpy = copy_data(data);
+		cpy -> thread_id = i;
+		if (pthread_create(&threads[i++], NULL, run_philo, cpy) != 0)
 		{
 			while (i--)
 				pthread_detach(threads[i]);
@@ -80,16 +71,5 @@ void	init_time(t_data *data)
 	pthread_mutex_unlock(data -> sim_status);
 }
 
-void	del_data(t_data *data)
-{
-	sleep(1);
-	free(data -> t_last_meal);
-	data -> t_last_meal = NULL;
-	free(data -> sim_status);
-	data -> sim_status = NULL;
-	free(data -> n_meals);
-	data -> n_meals = NULL;
-	free(data);
-	data = NULL;
-}
+
 

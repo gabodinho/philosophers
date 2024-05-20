@@ -13,6 +13,7 @@
 CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g
 HEADERS	:= -I include
 SRCS 	:=	philo_utils.c \
+			philo_utils2.c \
 			philo_helpers.c \
 			philo_main.c \
 			philo_mutex.c \

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     data = get_data(argc, argv);
     if (!data)
         return (1);
-    start_monitoring(data);
-    start_threading(data);
+    if (!start_monitoring(data))
+        start_threading(data);
     return (0);
 }

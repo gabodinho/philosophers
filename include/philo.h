@@ -37,8 +37,9 @@ typedef struct s_data
 	int	t_eat;
 	int	t_sleep;
 	int	n_eat;
+	int	thread_id;
 	// duplicate those pointers for every thread
-	int	*t_last_meal;
+	struct timeval	**t_last_meal;
 	int	*sim_status;
 	int	*n_meals;
 	pthread_mutex_t	*forks;
@@ -56,7 +57,7 @@ int	ft_atoi(const char *nptr);
 int	ft_isnum(int c);
 int	input_check(int argc, char *argv[]);
 int	ft_isdigit(int c);
-pthread_mutex_t	*create_mutexes(int	num_phil);
+pthread_mutex_t	*create_mutexes(int	n);
 t_data	*get_data(int argc, char *argv[]);
 int	start_threading(t_data *data);
 void	*throw_error(char *msg, void *ptr);
@@ -64,6 +65,11 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_bzero(void *s, size_t n);
 int		print_err(int err);
 int		start_threading(t_data *data);
+int	start_monitoring(t_data *data);
 void	*get_info(int i, t_data *data);
+t_data	*copy_data(t_data *in);
+void	del_data(t_data *data);
+void	print_msg(int i, t_status stat, struct timeval *time);
+int	get_t_diff(struct timeval *last);
 
 #endif

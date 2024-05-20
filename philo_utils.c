@@ -63,25 +63,25 @@ int	print_err(int err)
 }
 
 
-pthread_mutex_t	*create_mutexes(int	num_phil)
-{
-	pthread_mutex_t	*arr;
-	int				i;
+// pthread_mutex_t	*create_mutexes(int	num_phil)
+// {
+// 	pthread_mutex_t	*arr;
+// 	int				i;
 
-	i = 0;
-	arr = malloc(sizeof(pthread_mutex_t) * (num_phil));
-	if (!arr)
-		return (throw_error("malloc", NULL));
-	while (i < num_phil)
-	{
-		if (pthread_mutex_init(&arr[i++], NULL) != 0)
-		{
-			while (i--)
-				pthread_mutex_destroy(&arr[i]);
-			free(arr);
-			return (throw_error("mutex_init", NULL));
-		}
-	}
-	return (arr);
-}
+// 	i = 0;
+// 	arr = malloc(sizeof(pthread_mutex_t) * (num_phil));
+// 	if (!arr)
+// 		return (throw_error("malloc", NULL));
+// 	while (i < num_phil)
+// 	{
+// 		if (pthread_mutex_init(&arr[i++], NULL) != 0)
+// 		{
+// 			while (i--)
+// 				pthread_mutex_destroy(&arr[i]);
+// 			free(arr);
+// 			return (throw_error("mutex_init", NULL));
+// 		}
+// 	}
+// 	return (arr);
+// }
 
