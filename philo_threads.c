@@ -12,18 +12,60 @@
 
 #include "philo.h"
 
+int	eat(t_data *data)
+{
+	int	i;
+	int	ii;
+
+	i = data -> phil_id;
+	ii = (i + 1) % data -> n_phil;
+	if (i != data -> n_phil - 1)
+	{
+		pthread_mutex_lock(&data -> forks[i]);
+		// lock global_sim
+		// print has taken fork (if nonzero)
+		// unlock global sim
+		pthread_mutex_lock(&data -> forks[ii]);
+		// lock eaten
+		// set_time
+		// set_n_eaten
+		// lock global_sim
+		// 	print has taken fork (if nonzero)
+		// 	print is eating (if nonzero)
+		// unlock global sim
+		// unlock eaten
+		// sleep for t_eat
+		// release forks
+	}
+	else
+	{
+		pthread_mutex_lock(&data -> forks[ii]);
+		pthread_mutex_lock(&data -> forks[i]);
+	}
+}
+
+int	get_sim_stat(t_data *data, int i)
+{
+	int status;
+
+	pthread_mutex_lock(data -> global_sim);
+	status = *data -> sim_stat;
+	pthread_mutex_unlock(data -> global_sim);
+	return (status);
+}
+
 void	*run_philo(void *info)
 {
 	t_data			*data;
-	int				runs;
 	int				i;
 	struct timeval	start_time;
+	int				status;
 
 	gettimeofday(&start_time, NULL);
-	data = ((t_thread_inf *) info) -> data;
-	runs = data -> n_eat;
-	i = ((t_thread_inf *) info) -> current;
-	while (runs)
+	data = (t_data *) data;
+	i = data -> phil_id;
+	status = get_sim_stat(data, i);
+	while (status)
 	{
 
 		// to do: main logic
@@ -35,7 +77,7 @@ void	*run_philo(void *info)
 
 int	start_threading(t_data *data)
 {
-	int	i;
+	int			i;
 	pthread_t	*threads;
 	t_data		*cpy;
 
@@ -44,7 +86,7 @@ int	start_threading(t_data *data)
 	while (i < data -> n_phil)
 	{
 		cpy = copy_data(data);
-		cpy -> thread_id = i;
+		cpy -> phil_id = i;
 		if (pthread_create(&threads[i++], NULL, run_philo, cpy) != 0)
 		{
 			while (i--)
@@ -57,7 +99,7 @@ int	start_threading(t_data *data)
 	// join threads
 	// return
 }
-
+/*
 void	init_time(t_data *data)
 {
 	struct timeval	start;
@@ -65,11 +107,9 @@ void	init_time(t_data *data)
 
 	gettimeofday(&start, NULL);
 	i = 0;
-	pthread_mutex_lock(data -> sim_status);
+	pthread_mutex_lock(data -> sim_stat);
 	while (i < data -> n_phil)
 		data -> t_last_meal[i++] = start.tv_sec * 1000 + start.tv_usec / 1000;
-	pthread_mutex_unlock(data -> sim_status);
+	pthread_mutex_unlock(data -> sim_stat);
 }
-
-
-
+*/

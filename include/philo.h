@@ -37,11 +37,12 @@ typedef struct s_data
 	int	t_eat;
 	int	t_sleep;
 	int	n_eat;
-	int	thread_id;
+	int	phil_id;
 	// duplicate those pointers for every thread
 	struct timeval	**t_last_meal;
-	int	*sim_status;
+	int	*sim_stat;
 	int	*n_meals;
+	pthread_mutex_t	*syncro;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*eaten;	// for *t_last_meal access
 	pthread_mutex_t	*global_sim;

@@ -24,9 +24,9 @@ t_data	*copy_data(t_data *in)
 	out -> t_eat = in -> t_eat;
 	out -> t_sleep = in -> t_sleep;
 	out -> n_eat = in -> n_eat;
-	out -> thread_id = in -> thread_id;
+	out -> phil_id = in -> phil_id;
 	out -> t_last_meal = in -> t_last_meal;
-	out -> sim_status = in -> sim_status;
+	out -> sim_stat = in -> sim_stat;
 	out -> n_meals = in -> n_meals;
 	out -> forks = in -> forks;
 	out -> eaten = in -> eaten;
@@ -50,8 +50,8 @@ void	del_data(t_data *data)
 	// sleep(1);
 	free(data -> t_last_meal);
 	data -> t_last_meal = NULL;
-	free(data -> sim_status);
-	data -> sim_status = NULL;
+	free(data -> sim_stat);
+	data -> sim_stat = NULL;
 	free(data -> n_meals);
 	data -> n_meals = NULL;
 	if (data -> forks)
