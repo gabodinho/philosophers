@@ -67,7 +67,7 @@ static void	*monitoring(void *arg)
 		status = check_n_meals(meals, data);
 		// evtl sleep einfügen
 	}
-	del_data(data);
+	return (arg);
 }
 int	start_monitoring(t_data *data)
 {
@@ -75,7 +75,7 @@ int	start_monitoring(t_data *data)
 	pthread_t	monitor;
 
 	data_cpy = copy_data(data);
-	if (pthread_create(monitor, NULL, monitoring, (void *) data_cpy) != 0)
+	if (pthread_create(&monitor, NULL, monitoring, (void *) data_cpy) != 0)
 	{
 		pthread_detach(monitor);
 		del_data(data_cpy);

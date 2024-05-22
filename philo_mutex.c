@@ -42,18 +42,22 @@ static int	alloc_arrays(t_data *data)
 	data -> forks = create_mutexes(data -> n_phil);
 	data -> eaten = create_mutexes(data -> n_phil);
 	data -> global_sim = create_mutexes(1);
-	data -> syncro = create_mutexes(1);
 	data -> t_last_meal = malloc(data -> n_phil * sizeof(struct timeval));
 	data -> sim_stat = malloc(sizeof(int));
 	data -> n_meals = malloc(data -> n_phil * sizeof(int));
 	if (!data -> forks || !data -> eaten || !data -> global_sim ||
-		!data -> t_last_meal || !data -> sim_stat || data -> syncro ||
-		!data -> n_meals)
-		return (1);
+		!data -> t_last_meal || !data -> sim_stat || !data -> n_meals)
+		{
+			printf("return error in alloc\n");	// tbd
+			return (1);
+		}
 	memset(data -> n_meals, 0, sizeof(int) * data -> n_phil);
 	*data -> sim_stat = 1;
 	while (i < data -> n_phil)
-		gettimeofday(data -> t_last_meal[i++], NULL);
+	{
+		gettimeofday(data -> t_last_meal[i], NULL);
+		i++;
+	}
 	return (0);
 }
 
@@ -64,6 +68,7 @@ t_data	*get_data(int argc, char *argv[])
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
+	printf("we're still here\n");
 	data -> n_phil = ft_atoi(argv[1]);
 	data -> t_die = ft_atoi(argv[2]);
 	data -> t_eat = ft_atoi(argv[3]);
@@ -75,6 +80,7 @@ t_data	*get_data(int argc, char *argv[])
 	if (alloc_arrays(data))
 	{
 		del_data(data);
+		printf("alloc error\n");
 		return (NULL);
 	}
 	return (data);

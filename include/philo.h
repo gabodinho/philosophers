@@ -42,7 +42,6 @@ typedef struct s_data
 	struct timeval	**t_last_meal;
 	int	*sim_stat;
 	int	*n_meals;
-	pthread_mutex_t	*syncro;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*eaten;	// for *t_last_meal access
 	pthread_mutex_t	*global_sim;
@@ -72,5 +71,6 @@ t_data	*copy_data(t_data *in);
 void	del_data(t_data *data);
 void	print_msg(int i, t_status stat, struct timeval *time);
 int	get_t_diff(struct timeval *last);
+void	print_data(t_data *data);
 
 #endif

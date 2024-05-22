@@ -12,39 +12,8 @@
 
 #include "philo.h"
 
-int	eat(t_data *data)
-{
-	int	i;
-	int	ii;
 
-	i = data -> phil_id;
-	ii = (i + 1) % data -> n_phil;
-	if (i != data -> n_phil - 1)
-	{
-		pthread_mutex_lock(&data -> forks[i]);
-		// lock global_sim
-		// print has taken fork (if nonzero)
-		// unlock global sim
-		pthread_mutex_lock(&data -> forks[ii]);
-		// lock eaten
-		// set_time
-		// set_n_eaten
-		// lock global_sim
-		// 	print has taken fork (if nonzero)
-		// 	print is eating (if nonzero)
-		// unlock global sim
-		// unlock eaten
-		// sleep for t_eat
-		// release forks
-	}
-	else
-	{
-		pthread_mutex_lock(&data -> forks[ii]);
-		pthread_mutex_lock(&data -> forks[i]);
-	}
-}
-
-int	get_sim_stat(t_data *data, int i)
+int	get_sim_stat(t_data *data)
 {
 	int status;
 
@@ -54,25 +23,77 @@ int	get_sim_stat(t_data *data, int i)
 	return (status);
 }
 
-void	*run_philo(void *info)
+int	check_stat_print(t_data *data, t_status msg, struct timeval *time)
+{
+	int	status;
+
+	pthread_mutex_lock(data -> global_sim);
+	status = *data -> sim_stat;
+	if (status)
+		print_msg(data -> phil_id, msg, time);
+	pthread_mutex_unlock(data -> global_sim);
+	return (status);
+}
+
+void	phil_eat(t_data *data, struct timeval *time)
+{
+	int	first_fork;
+	int	second_fork;
+
+	first_fork = data -> phil_id;
+	second_fork = (first_fork + 1) % data -> n_phil;
+	if (first_fork == data -> n_phil - 1)
+	{
+		first_fork = second_fork;
+		second_fork = data -> n_phil - 1;
+	}
+	pthread_mutex_lock(&data -> forks[first_fork]);
+	check_stat_print(data, FORK, time);
+	pthread_mutex_lock(&data -> forks[second_fork]);
+	check_stat_print(data, FORK, time);
+	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
+	gettimeofday(data -> t_last_meal[data -> phil_id], NULL);
+	data -> n_meals[data -> phil_id]++;
+	check_stat_print(data, EAT, time);
+	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
+	usleep(data -> t_eat * 1000);
+	pthread_mutex_unlock(&data -> forks[second_fork]);
+	pthread_mutex_unlock(&data -> forks[first_fork]);
+}
+
+int	phil_think(t_data *data, struct timeval *time)
+{
+	int	status;
+
+	status = check_stat_print(data, THINK, time);
+	return (status);
+}
+
+int	phil_sleep(t_data *data, struct timeval *time)
+{
+	int	status;
+
+	status = check_stat_print(data, SLEEP, time);
+	usleep(data -> t_sleep * 1000);
+	return (status);
+}
+
+void	*run_philo(void *var)
 {
 	t_data			*data;
-	int				i;
 	struct timeval	start_time;
 	int				status;
 
 	gettimeofday(&start_time, NULL);
-	data = (t_data *) data;
-	i = data -> phil_id;
-	status = get_sim_stat(data, i);
+	data = (t_data *) var;
+ 	status = get_sim_stat(data);
 	while (status)
 	{
-
-		// to do: main logic
-
+		phil_eat(data, &start_time);
+		phil_sleep(data, &start_time);
+		status = phil_think(data, &start_time);
 	}
-	free(info);
-	// return
+	return (var);
 }
 
 int	start_threading(t_data *data)
@@ -96,6 +117,7 @@ int	start_threading(t_data *data)
 			return (1);
 		}
 	}
+	return (0);
 	// join threads
 	// return
 }
