@@ -20,7 +20,7 @@ void    print_data(t_data *data)
 data -> n_eat, data -> phil_id);
     while (i < data -> n_phil)
     {
-        printf("start time %d: %ld\n", i, (data -> t_last_meal[i]) -> tv_sec);
+        printf("start time %d: %ln\n", i, &data -> t_last_meal[i].tv_sec);
         i++;
     }
 }

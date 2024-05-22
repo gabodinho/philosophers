@@ -17,7 +17,7 @@ static int	check_philo_stat(t_data *data, int i, struct timeval time, int *meals
 	pthread_mutex_lock(&data -> eaten[i]);
 	if (data -> n_eat > 0 && data -> n_eat <= data -> n_meals[i])
 		meals[i] = 1;
-	if (get_t_diff(data -> t_last_meal[i]) >= data -> t_die)
+	if (get_t_diff(&data -> t_last_meal[i]) >= data -> t_die)
 	{
 		pthread_mutex_lock(data -> global_sim);
 		*data -> sim_stat = 0;

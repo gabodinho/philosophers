@@ -55,7 +55,7 @@ static int	alloc_arrays(t_data *data)
 	*data -> sim_stat = 1;
 	while (i < data -> n_phil)
 	{
-		gettimeofday(data -> t_last_meal[i], NULL);
+		gettimeofday(&data -> t_last_meal[i], NULL);
 		i++;
 	}
 	return (0);

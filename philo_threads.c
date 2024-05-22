@@ -52,7 +52,7 @@ void	phil_eat(t_data *data, struct timeval *time)
 	pthread_mutex_lock(&data -> forks[second_fork]);
 	check_stat_print(data, FORK, time);
 	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
-	gettimeofday(data -> t_last_meal[data -> phil_id], NULL);
+	gettimeofday(&data -> t_last_meal[data -> phil_id], NULL);
 	data -> n_meals[data -> phil_id]++;
 	check_stat_print(data, EAT, time);
 	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
