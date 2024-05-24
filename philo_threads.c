@@ -93,7 +93,8 @@ void	*run_philo(void *var)
 		phil_sleep(data, &start_time);
 		status = phil_think(data, &start_time);
 	}
-	return (var);
+	free(var);
+	return (NULL);
 }
 
 int	start_threading(t_data *data)
@@ -109,17 +110,15 @@ int	start_threading(t_data *data)
 		cpy = copy_data(data);
 		cpy -> phil_id = i;
 		if (pthread_create(&threads[i++], NULL, run_philo, cpy) != 0)
-		{
-			while (i--)
-				pthread_detach(threads[i]);
-			// clear_data(data);		clear in thread function
-			ft_putstr_fd("pthread_create error\n", 1);
-			return (1);
-		}
+			return (5);
+	}
+	i = 0;
+	while (i < data -> n_phil)
+	{
+		if (pthread_join(threads[i++], NULL) != 0)
+			return (6);
 	}
 	return (0);
-	// join threads
-	// return
 }
 /*
 void	init_time(t_data *data)

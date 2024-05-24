@@ -20,7 +20,7 @@ void    print_data(t_data *data)
 data -> n_eat, data -> phil_id);
     while (i < data -> n_phil)
     {
-        printf("start time %d: %ln\n", i, &data -> t_last_meal[i].tv_sec);
+        printf("start time %d: %ld\n", i, data -> t_last_meal[i].tv_sec);
         i++;
     }
 }
@@ -32,14 +32,16 @@ int main(int argc, char *argv[])
 
     ret = input_check(argc, argv);
     if (ret)
-        return (print_err(ret));
+        return (print_err(ret), 1);
     else
         printf("success\n");        // to be removed
     data = get_data(argc, argv);
     print_data(data);
     if (!data)
-        return (1);
-    if (!start_monitoring(data))
-        start_threading(data);
-    return (0);
+        return (2);
+    ret = start_monitoring(data);
+    if (!ret)
+        ret = start_threading(data);
+    // del_data(data);
+    return (ret);
 }

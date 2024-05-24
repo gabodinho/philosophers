@@ -35,6 +35,8 @@ static int	check_n_meals(int *meals, t_data *data)
 	int	i;
 
 	i = 0;
+	if (data -> n_eat == -1)
+		return (1);
 	while (data -> n_eat > 0 && i < data -> n_phil)
 	{
 		if (meals[i] == 0)
@@ -64,10 +66,13 @@ static void	*monitoring(void *arg)
 		i = 0;
 		while (i < data -> n_phil && status)
 			status = check_philo_stat(data, i++, start, meals);
+		if (!status)
+			break ;
 		status = check_n_meals(meals, data);
 		// evtl sleep einfügen
 	}
-	return (arg);
+	free(arg);
+	return (NULL);
 }
 int	start_monitoring(t_data *data)
 {
@@ -77,11 +82,11 @@ int	start_monitoring(t_data *data)
 	data_cpy = copy_data(data);
 	if (pthread_create(&monitor, NULL, monitoring, (void *) data_cpy) != 0)
 	{
-		pthread_detach(monitor);
-		del_data(data_cpy);
-		del_data(data);
-		return (1);
+		free(data_cpy);
+		return (3);
 	}
+	if (pthread_join(monitor, NULL) != 0)
+		return (4);
 	return (0);
 }
 
