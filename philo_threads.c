@@ -47,6 +47,7 @@ void	phil_eat(t_data *data, struct timeval *time)
 		first_fork = second_fork;
 		second_fork = data -> n_phil - 1;
 	}
+	//	insert fork avalability check
 	pthread_mutex_lock(&data -> forks[first_fork]);
 	check_stat_print(data, FORK, time);
 	pthread_mutex_lock(&data -> forks[second_fork]);

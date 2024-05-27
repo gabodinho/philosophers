@@ -65,11 +65,13 @@ static void	*monitoring(void *arg)
 	{
 		i = 0;
 		while (i < data -> n_phil && status)
+		{
 			status = check_philo_stat(data, i++, start, meals);
+			usleep(10);
+		}
 		if (!status)
 			break ;
 		status = check_n_meals(meals, data);
-		// evtl sleep einfügen
 	}
 	free(arg);
 	return (NULL);
@@ -85,7 +87,7 @@ int	start_monitoring(t_data *data)
 		free(data_cpy);
 		return (3);
 	}
-	if (pthread_join(monitor, NULL) != 0)
+	if (pthread_detach(monitor) != 0)
 		return (4);
 	return (0);
 }

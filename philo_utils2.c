@@ -47,7 +47,7 @@ static void	destroy_mut(pthread_mutex_t	*mut_arr, int n)
 
 void	del_data(t_data *data)
 {
-	// sleep(1);
+	usleep(data -> t_eat * 1000);
 	free(data -> t_last_meal);
 	data -> t_last_meal = NULL;
 	free(data -> sim_stat);
@@ -89,5 +89,5 @@ void	print_msg(int i, t_status stat, struct timeval *time)
 		proc = "is dead";
 	else
 		proc = "has taken a fork";
-	printf("%d %d %s\n", t_diff, i, proc);
+	printf("%d %d %s\n", t_diff, i + 1, proc);
 }

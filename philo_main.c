@@ -39,9 +39,8 @@ int main(int argc, char *argv[])
     print_data(data);
     if (!data)
         return (2);
-    ret = start_monitoring(data);
-    if (!ret)
-        ret = start_threading(data);
-    // del_data(data);
+    start_monitoring(data);
+    ret = start_threading(data);
+    del_data(data);
     return (ret);
 }
