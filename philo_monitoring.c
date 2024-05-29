@@ -15,7 +15,7 @@
 static int	check_philo_stat(t_data *data, int i, struct timeval time, int *meals)
 {
 	pthread_mutex_lock(&data -> eaten[i]);
-	if (data -> n_eat > 0 && data -> n_eat <= data -> n_meals[i])
+	if (data -> n_eat != -1 && data -> n_eat <= data -> n_meals[i])
 		meals[i] = 1;
 	if (get_t_diff(&data -> t_last_meal[i]) >= data -> t_die)
 	{
@@ -37,13 +37,14 @@ static int	check_n_meals(int *meals, t_data *data)
 	i = 0;
 	if (data -> n_eat == -1)
 		return (1);
-	while (data -> n_eat > 0 && i < data -> n_phil)
+	while (data -> n_eat != -1 && i < data -> n_phil)
 	{
-		if (meals[i] == 0)
+		if (meals[i++] == 0)
 			return (1);
 	}
 	pthread_mutex_lock(data -> global_sim);
 	*data -> sim_stat = 0;
+	printf("all philosophers satisfied\n");
 	pthread_mutex_unlock(data -> global_sim);
 	return (0);
 }
@@ -65,13 +66,11 @@ static void	*monitoring(void *arg)
 	{
 		i = 0;
 		while (i < data -> n_phil && status)
-		{
 			status = check_philo_stat(data, i++, start, meals);
-			usleep(10);
-		}
 		if (!status)
 			break ;
 		status = check_n_meals(meals, data);
+		usleep(10);
 	}
 	free(arg);
 	return (NULL);

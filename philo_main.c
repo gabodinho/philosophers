@@ -33,14 +33,12 @@ int main(int argc, char *argv[])
     ret = input_check(argc, argv);
     if (ret)
         return (print_err(ret), 1);
-    else
-        printf("success\n");        // to be removed
     data = get_data(argc, argv);
-    print_data(data);
     if (!data)
         return (2);
     start_monitoring(data);
     ret = start_threading(data);
+    usleep(100);
     del_data(data);
     return (ret);
 }

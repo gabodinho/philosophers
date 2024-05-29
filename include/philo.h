@@ -42,6 +42,7 @@ typedef struct s_data
 	struct timeval	*t_last_meal;
 	int	*sim_stat;
 	int	*n_meals;
+	int	*fork_stat;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*eaten;	// for *t_last_meal access
 	pthread_mutex_t	*global_sim;

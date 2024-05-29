@@ -28,6 +28,7 @@ t_data	*copy_data(t_data *in)
 	out -> t_last_meal = in -> t_last_meal;
 	out -> sim_stat = in -> sim_stat;
 	out -> n_meals = in -> n_meals;
+	out -> fork_stat = in -> fork_stat;
 	out -> forks = in -> forks;
 	out -> eaten = in -> eaten;
 	out -> global_sim = in -> global_sim;

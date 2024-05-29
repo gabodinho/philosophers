@@ -41,13 +41,17 @@ static int	alloc_arrays(t_data *data)
 	data -> t_last_meal = malloc(data -> n_phil * sizeof(struct timeval));
 	data -> sim_stat = malloc(sizeof(int));
 	data -> n_meals = malloc(data -> n_phil * sizeof(int));
+	data -> fork_stat = malloc(data -> n_phil * sizeof(int));
 	if (!data -> forks || !data -> eaten || !data -> global_sim ||
 		!data -> t_last_meal || !data -> sim_stat || !data -> n_meals)
 		return (1);
-	memset(data -> n_meals, 0, sizeof(int) * data -> n_phil);
 	*data -> sim_stat = 1;
 	while (i < data -> n_phil)
+	{
+		data -> n_meals[i] = 0;
+		data -> fork_stat[i] = 0;
 		gettimeofday(&data -> t_last_meal[i++], NULL);
+	}
 	return (0);
 }
 

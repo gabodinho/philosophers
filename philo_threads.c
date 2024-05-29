@@ -35,31 +35,61 @@ int	check_stat_print(t_data *data, t_status msg, struct timeval *time)
 	return (status);
 }
 
+void	phil_eat_exec(t_data *data, struct timeval *time, int fst, int snd)
+{
+	check_stat_print(data, FORK, time);
+	check_stat_print(data, FORK, time);
+	data -> fork_stat[fst] = 1;
+	data -> fork_stat[snd] = 1;
+	pthread_mutex_unlock(&data -> forks[snd]);
+	pthread_mutex_unlock(&data -> forks[fst]);
+	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
+	gettimeofday(&data -> t_last_meal[data -> phil_id], NULL);
+	data -> n_meals[data -> phil_id] += 1;
+	check_stat_print(data, EAT, time);
+	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
+	usleep(data -> t_eat * 1000);
+	pthread_mutex_lock(&data -> forks[fst]);
+	pthread_mutex_lock(&data -> forks[snd]);
+	data -> fork_stat[fst] = 0;
+	data -> fork_stat[snd] = 0;
+	pthread_mutex_unlock(&data -> forks[snd]);
+	pthread_mutex_unlock(&data -> forks[fst]);
+}
+
+void	set_forks(t_data *data, int *first, int *second)
+{
+	*first = data -> phil_id;
+	*second = (*first + 1) % data -> n_phil;
+	if (*first == data -> n_phil - 1)
+	{
+		*first = *second;
+		*second = data -> n_phil - 1;
+	}
+}
+
 void	phil_eat(t_data *data, struct timeval *time)
 {
 	int	first_fork;
 	int	second_fork;
 
-	first_fork = data -> phil_id;
-	second_fork = (first_fork + 1) % data -> n_phil;
-	if (first_fork == data -> n_phil - 1)
+	set_forks(data, &first_fork, &second_fork);
+	while (1)
 	{
-		first_fork = second_fork;
-		second_fork = data -> n_phil - 1;
+		pthread_mutex_lock(&data -> forks[first_fork]);
+		pthread_mutex_lock(&data -> forks[second_fork]);
+		if (!data -> fork_stat[first_fork] && !data -> fork_stat[second_fork])
+		{
+			phil_eat_exec(data, time, first_fork, second_fork);
+			break ;
+		}
+		else
+		{
+			pthread_mutex_unlock(&data -> forks[second_fork]);
+			pthread_mutex_unlock(&data -> forks[first_fork]);
+		}
+		usleep(10);
 	}
-	//	insert fork avalability check
-	pthread_mutex_lock(&data -> forks[first_fork]);
-	check_stat_print(data, FORK, time);
-	pthread_mutex_lock(&data -> forks[second_fork]);
-	check_stat_print(data, FORK, time);
-	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
-	gettimeofday(&data -> t_last_meal[data -> phil_id], NULL);
-	data -> n_meals[data -> phil_id]++;
-	check_stat_print(data, EAT, time);
-	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
-	usleep(data -> t_eat * 1000);
-	pthread_mutex_unlock(&data -> forks[second_fork]);
-	pthread_mutex_unlock(&data -> forks[first_fork]);
 }
 
 int	phil_think(t_data *data, struct timeval *time)
