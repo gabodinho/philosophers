@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static int	check_philo_stat(t_data *data, int i, struct timeval time, int *meals)
+static int	check_philo_stat(t_data *data, int i, int *meals)
 {
 	pthread_mutex_lock(&data -> eaten[i]);
 	if (data -> n_eat != -1 && data -> n_eat <= data -> n_meals[i])
@@ -22,7 +22,7 @@ static int	check_philo_stat(t_data *data, int i, struct timeval time, int *meals
 		pthread_mutex_lock(data -> global_sim);
 		*data -> sim_stat = 0;
 		pthread_mutex_unlock(data -> global_sim);
-		print_msg(i, DEAD, &time);
+		print_msg(i, DEAD);
 		pthread_mutex_unlock(&data -> eaten[i]);
 		return (0);
 	}
@@ -51,10 +51,10 @@ static int	check_n_meals(int *meals, t_data *data)
 
 static void	*monitoring(void *arg)
 {
-	int		status;
-	int		i;
-	int		*meals;
-	t_data	*data;
+	int				status;
+	int				i;
+	int				*meals;
+	t_data			*data;
 	struct timeval	start;
 
 	gettimeofday(&start, NULL);
@@ -66,7 +66,7 @@ static void	*monitoring(void *arg)
 	{
 		i = 0;
 		while (i < data -> n_phil && status)
-			status = check_philo_stat(data, i++, start, meals);
+			status = check_philo_stat(data, i++, meals);
 		if (!status)
 			break ;
 		status = check_n_meals(meals, data);
@@ -75,20 +75,24 @@ static void	*monitoring(void *arg)
 	free(arg);
 	return (NULL);
 }
+
 int	start_monitoring(t_data *data)
 {
 	t_data		*data_cpy;
 	pthread_t	monitor;
+	int			ret;
 
+	ret = 0;
 	data_cpy = copy_data(data);
 	if (pthread_create(&monitor, NULL, monitoring, (void *) data_cpy) != 0)
 	{
 		free(data_cpy);
 		return (3);
 	}
-	if (pthread_detach(monitor) != 0)
+	ret = start_threading(data);
+	if (pthread_join(monitor, NULL) != 0)
 		return (4);
-	return (0);
+	return (ret);
 }
 
 /*

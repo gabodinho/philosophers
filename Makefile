@@ -19,7 +19,8 @@ SRCS 	:=	philo_utils.c \
 			philo_main.c \
 			philo_mutex.c \
 			philo_threads.c \
-			philo_monitoring.c
+			philo_monitoring.c \
+			philo_eat.c
 OBJS	:= ${SRCS:.c=.o}
 NAME	:= philo
 

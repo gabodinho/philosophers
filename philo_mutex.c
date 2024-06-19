@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-pthread_mutex_t	*create_mutexes(int	n)
+static pthread_mutex_t	*create_mutexes(int n)
 {
 	pthread_mutex_t	*arr;
 	int				i;
@@ -42,8 +42,8 @@ static int	alloc_arrays(t_data *data)
 	data -> sim_stat = malloc(sizeof(int));
 	data -> n_meals = malloc(data -> n_phil * sizeof(int));
 	data -> fork_stat = malloc(data -> n_phil * sizeof(int));
-	if (!data -> forks || !data -> eaten || !data -> global_sim ||
-		!data -> t_last_meal || !data -> sim_stat || !data -> n_meals)
+	if (!data -> forks || !data -> eaten || !data -> global_sim
+		|| !data -> t_last_meal || !data -> sim_stat || !data -> n_meals)
 		return (1);
 	*data -> sim_stat = 1;
 	while (i < data -> n_phil)

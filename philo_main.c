@@ -12,33 +12,28 @@
 
 #include "philo.h"
 
-void    print_data(t_data *data)
+static int	one_phil(t_data *data)
 {
-    int i = 0;
-    printf("data:\tn_phil:%d\n\tt_die:%d\n\tt_eat:%d\n\tt_sleep:%d\n\tn_eat:%d\n\tphil_id%d\n",
-    data -> n_phil, data -> t_die, data -> t_eat, data -> t_sleep,
-data -> n_eat, data -> phil_id);
-    while (i < data -> n_phil)
-    {
-        printf("start time %d: %ld\n", i, data -> t_last_meal[i].tv_sec);
-        i++;
-    }
+	print_msg(0, FORK);
+	usleep(data -> t_die * 1000);
+	print_msg(0, DEAD);
+	return (0);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
-    t_data  *data;
-    int     ret;
+	t_data	*data;
+	int		ret;
 
-    ret = input_check(argc, argv);
-    if (ret)
-        return (print_err(ret), 1);
-    data = get_data(argc, argv);
-    if (!data)
-        return (2);
-    start_monitoring(data);
-    ret = start_threading(data);
-    usleep(100);
-    del_data(data);
-    return (ret);
+	ret = input_check(argc, argv);
+	if (ret)
+		return (print_err(ret), 1);
+	data = get_data(argc, argv);
+	if (!data)
+		return (2);
+	else if (data -> n_phil == 1)
+		return (one_phil(data));
+	start_monitoring(data);
+	del_data(data);
+	return (ret);
 }

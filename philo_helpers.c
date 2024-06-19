@@ -61,27 +61,3 @@ int	ft_isdigit(int c)
 	else
 		return (0);
 }
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	while (*s)
-	{
-		write(fd, s, 1);
-		s++;
-	}
-	return ;
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned long	count;
-	char			*ptr;
-
-	count = 0;
-	ptr = (char *) s;
-	while (count < n)
-	{
-		ptr[count] = 0;
-		count++;
-	}
-}

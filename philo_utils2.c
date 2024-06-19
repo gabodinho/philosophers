@@ -74,12 +74,18 @@ int	get_t_diff(struct timeval *last)
 		+ (now.tv_usec - last -> tv_usec) / 1000);
 }
 
-void	print_msg(int i, t_status stat, struct timeval *time)
+void	print_msg(int i, t_status stat)
 {
-	int		t_diff;
-	char	*proc;
+	int						t_diff;
+	char					*proc;
+	static struct timeval	*start;
 
-	t_diff = get_t_diff(time);
+	if (!start)
+	{
+		start = malloc(sizeof(struct timeval));
+		gettimeofday(start, NULL);
+	}
+	t_diff = get_t_diff(start);
 	if (stat == SLEEP)
 		proc = "is sleeping";
 	else if (stat == EAT)
@@ -87,7 +93,10 @@ void	print_msg(int i, t_status stat, struct timeval *time)
 	else if (stat == THINK)
 		proc = "is thinking";
 	else if (stat == DEAD)
+	{
 		proc = "is dead";
+		t_diff += 1;
+	}
 	else
 		proc = "has taken a fork";
 	printf("%d %d %s\n", t_diff, i + 1, proc);
