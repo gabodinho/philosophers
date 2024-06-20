@@ -12,16 +12,6 @@
 
 #include "philo.h"
 
-// static int	get_sim_stat(t_data *data)
-// {
-// 	int	status;
-
-// 	pthread_mutex_lock(data -> global_sim);
-// 	status = *data -> sim_stat;
-// 	pthread_mutex_unlock(data -> global_sim);
-// 	return (status);
-// }
-
 int	check_stat_print(t_data *data, t_status msg)
 {
 	int	status;

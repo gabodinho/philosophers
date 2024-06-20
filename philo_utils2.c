@@ -55,6 +55,8 @@ void	del_data(t_data *data)
 	data -> sim_stat = NULL;
 	free(data -> n_meals);
 	data -> n_meals = NULL;
+	free(data -> fork_stat);
+	data -> fork_stat = NULL;
 	if (data -> forks)
 		destroy_mut(data -> forks, data -> n_phil);
 	if (data -> eaten)
@@ -85,7 +87,7 @@ void	print_msg(int i, t_status stat)
 		start = malloc(sizeof(struct timeval));
 		gettimeofday(start, NULL);
 	}
-	t_diff = get_t_diff(start);
+	t_diff = get_t_diff(start) + 1;
 	if (stat == SLEEP)
 		proc = "is sleeping";
 	else if (stat == EAT)
@@ -95,7 +97,7 @@ void	print_msg(int i, t_status stat)
 	else if (stat == DEAD)
 	{
 		proc = "is dead";
-		t_diff += 1;
+		free(start);
 	}
 	else
 		proc = "has taken a fork";

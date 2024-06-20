@@ -71,5 +71,6 @@ int	start_threading(t_data *data)
 		if (pthread_join(threads[i++], NULL) != 0)
 			return (6);
 	}
+	free(threads);
 	return (0);
 }

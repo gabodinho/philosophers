@@ -10,8 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g
-#CFLAGS  := -Wall -Werror -Wextra -g
+#CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g
+CFLAGS  := -Wall -Werror -Wextra -g
 HEADERS	:= -I include
 SRCS 	:=	philo_utils.c \
 			philo_utils2.c \

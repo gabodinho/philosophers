@@ -42,7 +42,7 @@ static int	check_n_meals(int *meals, t_data *data)
 		if (meals[i++] == 0)
 			return (1);
 	}
-	pthread_mutex_lock(data -> global_sim);
+	;
 	*data -> sim_stat = 0;
 	printf("all philosophers satisfied\n");
 	pthread_mutex_unlock(data -> global_sim);
@@ -73,6 +73,7 @@ static void	*monitoring(void *arg)
 		usleep(10);
 	}
 	free(arg);
+	free(meals);
 	return (NULL);
 }
 
