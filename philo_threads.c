@@ -37,6 +37,8 @@ static void	*run_philo(void *var)
 
 	gettimeofday(&start_time, NULL);
 	data = (t_data *) var;
+	if (data -> phil_id % 2 == 0)
+		usleep(500);
 	pthread_mutex_lock(data -> global_sim);
 	status = *data -> sim_stat;
 	pthread_mutex_unlock(data -> global_sim);
@@ -64,6 +66,7 @@ int	start_threading(t_data *data)
 		cpy -> phil_id = i;
 		if (pthread_create(&threads[i++], NULL, run_philo, cpy) != 0)
 			return (5);
+		usleep(500);
 	}
 	i = 0;
 	while (i < data -> n_phil)

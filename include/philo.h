@@ -27,7 +27,8 @@ typedef enum e_status
 	EAT,
 	THINK,
 	DEAD,
-	FORK
+	FORK,
+	FULL
 }	t_status;
 
 typedef struct s_data
@@ -65,7 +66,7 @@ int				start_threading(t_data *data);
 int				start_monitoring(t_data *data);
 t_data			*copy_data(t_data *in);
 void			del_data(t_data *data);
-void			print_msg(int i, t_status stat);
+struct timeval	*print_msg(int i, t_status stat);
 int				get_t_diff(struct timeval *last);
 int				check_stat_print(t_data *data, t_status msg);
 void			phil_eat(t_data *data);

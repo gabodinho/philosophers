@@ -14,6 +14,8 @@
 
 static int	check_philo_stat(t_data *data, int i, int *meals)
 {
+	struct timeval	*start;
+
 	pthread_mutex_lock(&data -> eaten[i]);
 	if (data -> n_eat != -1 && data -> n_eat <= data -> n_meals[i])
 		meals[i] = 1;
@@ -22,7 +24,8 @@ static int	check_philo_stat(t_data *data, int i, int *meals)
 		pthread_mutex_lock(data -> global_sim);
 		*data -> sim_stat = 0;
 		pthread_mutex_unlock(data -> global_sim);
-		print_msg(i, DEAD);
+		start = print_msg(i, DEAD);
+		free(start);
 		pthread_mutex_unlock(&data -> eaten[i]);
 		return (0);
 	}
@@ -32,7 +35,8 @@ static int	check_philo_stat(t_data *data, int i, int *meals)
 
 static int	check_n_meals(int *meals, t_data *data)
 {
-	int	i;
+	int				i;
+	struct timeval	*start;
 
 	i = 0;
 	if (data -> n_eat == -1)
@@ -42,10 +46,12 @@ static int	check_n_meals(int *meals, t_data *data)
 		if (meals[i++] == 0)
 			return (1);
 	}
-	;
+	pthread_mutex_lock(data -> global_sim);
 	*data -> sim_stat = 0;
 	printf("all philosophers satisfied\n");
 	pthread_mutex_unlock(data -> global_sim);
+	start = print_msg(0, FULL);
+	free(start);
 	return (0);
 }
 
