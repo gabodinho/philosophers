@@ -34,10 +34,12 @@ static void	phil_eat_exec(t_data *data, int fst, int snd)
 	pthread_mutex_unlock(&data -> forks[fst]);
 	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
 	gettimeofday(&data -> t_last_meal[data -> phil_id], NULL);
-	data -> n_meals[data -> phil_id] += 1;
 	check_stat_print(data, EAT);
 	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
 	usleep(data -> t_eat * 1000);
+	pthread_mutex_lock(&data -> eaten[data -> phil_id]);
+	data -> n_meals[data -> phil_id] += 1;
+	pthread_mutex_unlock(&data -> eaten[data -> phil_id]);
 	pthread_mutex_lock(&data -> forks[fst]);
 	pthread_mutex_lock(&data -> forks[snd]);
 	data -> fork_stat[fst] = 0;

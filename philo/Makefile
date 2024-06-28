@@ -6,12 +6,13 @@
 #    By: irivero- <irivero-@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/22 19:51:00 by ggiertzu          #+#    #+#              #
-#    Updated: 2024/04/22 10:53:47 by irivero-         ###   ########.fr        #
+#    Updated: 2024/06/26 19:18:03 by ggiertzu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CFLAGS  := -Wall -Werror -Wextra -fsanitize=thread -g
 #CFLAGS  := -Wall -Werror -Wextra -g
+
 HEADERS	:= -I include
 SRCS 	:=	philo_utils.c \
 			philo_utils2.c \

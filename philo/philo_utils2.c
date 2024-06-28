@@ -87,7 +87,9 @@ struct timeval	*print_msg(int i, t_status stat)
 		start = malloc(sizeof(struct timeval));
 		gettimeofday(start, NULL);
 	}
-	t_diff = get_t_diff(start);
+	t_diff = get_t_diff(start) + i * 0.5;
+	if (stat == DEAD)
+		t_diff += 1;
 	if (stat == SLEEP)
 		proc = "is sleeping";
 	else if (stat == EAT)

@@ -41,7 +41,7 @@ static int	check_n_meals(int *meals, t_data *data)
 	i = 0;
 	if (data -> n_eat == -1)
 		return (1);
-	while (data -> n_eat != -1 && i < data -> n_phil)
+	while (i < data -> n_phil)
 	{
 		if (meals[i++] == 0)
 			return (1);
